@@ -4,15 +4,19 @@ services:
     image: 'bitnami/zookeeper:3.6'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - '2181:2181'
   kafka:
     build:
       context: ./docker/kafka
       dockerfile: Dockerfile
     environment:
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENERS: LISTENER_DOCKER_INTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://localhost:9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT
     ports:
       - '9092:9092'
     depends_on:

@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@streams/kafka": ["libs/kafka/src/index.ts"]
+      "@streams/kafka": ["libs/kafka/src/index.ts"],
+      "@streams/transport": ["libs/transport/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
