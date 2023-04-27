@@ -5,6 +5,8 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@fastify/busboy": "^1.2.1",
+    "@fastify/multipart": "^7.6.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
@@ -13,6 +15,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-fastify": "^9.4.0",
     "axios": "^1.0.0",
+    "fastify": "^4.15.0",
     "kafkajs": "^2.2.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",

@@ -1,5 +1,4 @@
 import { Controller, Get, Inject } from "@nestjs/common";
-import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AppService } from "./app.service";
 
 @Controller()
