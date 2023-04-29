@@ -9,7 +9,7 @@ const exists = async (path:string): Promise<boolean> => {
     return fs.access(path).then(() => true, () => false);
 }
 
-interface IFormData {
+export interface IFormData {
     id?: string;
     startByte?: number;
     endByte?: number;
@@ -72,15 +72,20 @@ export class BusboyUploader {
     private nextHandler = (resolve, reject) => {
         return (error: Error) => {
             if (error) {
-                reject(error);
+                reject({
+                    error,
+                    name: this.metaData.name,
+                    startByte: this.metaData.startByte,
+                    endByte: this.metaData.endByte
+                });
             }
-            resolve(true);
+            resolve(this.metaData);
         }
     };
 
     private fieldHandler = (key: string, value: any) => {
         if (Object.values(FormDataKeys).includes(key as FormDataKeys)) {
-            this.metaData[key] = value;
+            this.metaData[key] = Number.isInteger(Number(value)) ? Number(value) : value;
         }
     };
 
