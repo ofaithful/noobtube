@@ -23,7 +23,6 @@ enum FormDataKeys {
     END_BYTE = 'endByte',
     NAME = 'name'
 }
-
 export class BusboyUploader {
     private fileStream: Writable;
     private metaData: IFormData = {};
@@ -59,27 +58,32 @@ export class BusboyUploader {
 
         file.on('data', this.dataHandler);
         file.on('end', this.endHandler);
+
+        file.pipe(this.fileStream);
     }
 
     private dataHandler = (chunk: Buffer) => {
-        this.fileStream.write(chunk);
+        // TODO: revisit puspose 
     }
 
     private endHandler = () => {
-        this.fileStream.end();
+        // TODO: revisit puspose 
     }
 
     private nextHandler = (resolve, reject) => {
         return (error: Error) => {
             if (error) {
-                reject({
+                return reject({
                     error,
                     name: this.metaData.name,
                     startByte: this.metaData.startByte,
                     endByte: this.metaData.endByte
                 });
             }
-            resolve(this.metaData);
+
+            this.fileStream.end(() => {
+                resolve(this.metaData);
+            });
         }
     };
 
@@ -90,6 +94,6 @@ export class BusboyUploader {
     };
 
     private finishHandler = () => {
-        console.log('finish');
+        // TODO: revisit puspose 
     };
 }
