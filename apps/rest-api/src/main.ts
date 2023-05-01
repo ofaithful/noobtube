@@ -24,9 +24,9 @@ async function bootstrap() {
   app.enableCors();
   const port = process.env.PORT || 3000;
 
-  // app.connectMicroservice(getKafkaOptions('REST-API'));
+  app.connectMicroservice(getKafkaOptions('REST-API'));
 
-  // await app.startAllMicroservices();
+  await app.startAllMicroservices();
 
   await app.listen(port);
   Logger.log(
