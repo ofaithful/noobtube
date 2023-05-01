@@ -8,8 +8,8 @@ services:
       - '2181:2181'
   kafka:
     build:
-      context: ./docker/kafka
-      dockerfile: Dockerfile
+      context: ./docker
+      dockerfile: kafka
     environment:
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENERS: LISTENER_DOCKER_INTERNAL://0.0.0.0:9092
@@ -23,7 +23,7 @@ services:
       - zookeeper
   redis:
     build:
-      context: ./docker/redis
-      dockerfile: Dockerfile
+      context: ./docker
+      dockerfile: redis
     ports:
       - '6379:6379'
