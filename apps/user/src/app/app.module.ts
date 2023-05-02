@@ -6,6 +6,7 @@ import { DbModule } from '@streams/db';
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { AuthModule } from './auth';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { AppService } from "./app.service";
     DbModule.forRoot({
       mongoUri: process.env.MONGO_URI
     }),
-    TransportModule
+    TransportModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [

@@ -1,14 +1,15 @@
-import { Controller, Post, Req, Res, Get, Param } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 
-import { LocalUploaderService } from './local-uploader.service';
 import fs, { createReadStream } from 'fs';
-import path from 'path';
+import { AuthGuard } from '../guards/auth.guard';
+import { LocalUploaderService } from './local-uploader.service';
 @Controller('media')
 export class MediaController {
     constructor(private readonly uploadService: LocalUploaderService) {}
 
     @Post()
+    @UseGuards(AuthGuard)
     async upload(@Req() req, @Res() res: FastifyReply) {
         try {
             const result = await this.uploadService.handleUpload(req);

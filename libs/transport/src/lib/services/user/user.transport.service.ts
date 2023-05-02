@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { BaseTransportService } from '../../base';
+import { RegisterUserParams, RegisterUserResult } from './dto';
+import { MessageEnvelope } from '../../helpers';
 
 export const USER_SERVICE_METHODS = {
-    CREATE_USER: 'user_createUser'
+    REGISTER: 'register'
 }
 
 @Injectable()
@@ -13,8 +15,8 @@ export class UserTransportService
         return USER_SERVICE_METHODS;
     }
 
-    // todo: add types
-    async createUser(data: any): Promise<any> {
-        return this.send(USER_SERVICE_METHODS.CREATE_USER, data);
+    async register(data: RegisterUserParams): Promise<MessageEnvelope<RegisterUserResult>> {
+        console.log('---transport data:', data);
+        return this.send(USER_SERVICE_METHODS.REGISTER, data);
     }
 }

@@ -1,7 +1,28 @@
-import { ClientKafka, KafkaOptions, Transport } from '@nestjs/microservices';
+import { ClientKafka, KafkaOptions, MessagePattern, Transport } from '@nestjs/microservices';
 import { Provider, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
+
+enum RESPONSE_CODES {
+    USERNAME_ALREADY_EXISTS,
+}
+
+export interface MessageEnvelopeError<T> {
+    errorCode?: number;
+    error: Error | T;
+}
+
+export interface MessageEnvelope<T, E = string> {
+    success: boolean;
+    payload?: T;
+    error?: E;
+}
+
+export const KafkaTopic = (pattern: string) => {
+    const patternWithEnv = `${process.env.ENVIRONMENT || process.env.NODE_ENV}_${pattern}`;
+
+    return MessagePattern(patternWithEnv);
+}
 
 export function getKafkaOptions(serviceName: string): KafkaOptions {
     const envServiceName = `${process.env.ENVIRONMENT || process.env.NODE_ENV}_${serviceName}`;

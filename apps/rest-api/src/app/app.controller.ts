@@ -8,6 +8,7 @@ export class AppController {
 
   @Get()
   async getData() {
+    
     return this.appService.getData();
   }
 }

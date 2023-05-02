@@ -4,14 +4,16 @@ import { AppController } from './app.controller';
 import { TransportModule } from '@streams/transport';
 import { AppService } from './app.service';
 import { MediaModule } from './media';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true
     }),
-    // TransportModule,
-    MediaModule
+    TransportModule,
+    MediaModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

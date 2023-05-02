@@ -20,6 +20,13 @@ export abstract class BaseMongoRepository<T> {
         return this.collection.find(query, options);
     }
 
+    async countDocuments(query?: Filter<T>, options?: FindOptions<T>): Promise<number> {
+        console.log({query, options});
+        const r = await this.collection.countDocuments(query, options);
+        console.log('--count documents:', r);
+        return r;
+    }
+
     protected async insertOne(doc: OptionalUnlessRequiredId<T>) {
         const result = await this.collection.insertOne({
             ...doc,

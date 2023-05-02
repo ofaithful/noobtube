@@ -1,17 +1,15 @@
-import { Controller, Get } from "@nestjs/common";
-import { UserRepository } from '@streams/db';
-import { AppService } from "./app.service";
+import { Controller } from '@nestjs/common';
+import { KafkaTopic, MessageEnvelope, RegisterUserParams, RegisterUserResult, USER_SERVICE_METHODS } from '@streams/transport';
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
+    constructor(
+        private readonly appService: AppService
+    ) { }
 
-  constructor(
-    private readonly appService: AppService,
-    private readonly userRepository: UserRepository
-  ) {}
-
-  @Get()
-  getData() {
-    return this.appService.getData();
-  }
+    @KafkaTopic(USER_SERVICE_METHODS.REGISTER)
+    async register(data: RegisterUserParams): Promise<MessageEnvelope<RegisterUserResult>> {
+        return this.appService.register(data);
+    }
 }

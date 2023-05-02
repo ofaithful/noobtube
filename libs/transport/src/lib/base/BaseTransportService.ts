@@ -22,7 +22,8 @@ export abstract class BaseTransportService<K extends string, T extends Record<K,
     }
 
     // todo: add types
-    async send(topicName: string, data): Promise<any> {
+    async send<ReqData, ResData>(topicName: string, data: ReqData) {
+        console.log({sendData: data});
         const topic = getTopicName(this.config.get('ENVIRONMENT'), topicName);
 
         this.logger.debug('Send transport message', {
@@ -30,6 +31,7 @@ export abstract class BaseTransportService<K extends string, T extends Record<K,
             data
         });
 
-        return this.client.send(topic, data).toPromise();
+
+        return this.client.send(topic, JSON.stringify(data)).toPromise();
     }
 }
