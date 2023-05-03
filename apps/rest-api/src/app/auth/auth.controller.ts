@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import { AuthTransportService, UserTransportService } from '@streams/transport';
 import { LoginDto, LoginResultDto, RegisterDto, RegisterResultDto } from './dto';
 
@@ -13,7 +13,12 @@ export class AuthController {
     @Post('login')
     async loginUser(@Body() data: LoginDto): Promise<LoginResultDto> {
         const result = await this.auth.login(data);
-        return result.payload;
+
+        if (result.success) {
+            return result.payload;
+        }
+
+        throw new UnauthorizedException(result.error);
     }
 
     @Post('register')
@@ -24,6 +29,6 @@ export class AuthController {
             return result.payload;
         }
 
-        throw new Error(result.error);
+        throw new UnauthorizedException(result.error);
     }
 }

@@ -16,8 +16,12 @@ export abstract class BaseMongoRepository<T> {
         return this.db.collection(this.collectionName);
     }
 
-    protected find(query?: Filter<T>, options?: FindOptions<T>) {
+    find(query?: Filter<T>, options?: FindOptions<T>) {
         return this.collection.find(query, options);
+    }
+
+    findOne(query?: Filter<T>, options?: FindOptions<T>) {
+        return this.collection.findOne(query, options);
     }
 
     async countDocuments(query?: Filter<T>, options?: FindOptions<T>): Promise<number> {

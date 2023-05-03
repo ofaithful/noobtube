@@ -34,9 +34,7 @@ export class PasswordService {
     }
 
     async isPasswordCorrect(user: User, password: string): Promise<boolean> {
-        const salt = Buffer.from(user.salt).toString('base64');
-        const hashed = await this.hashPassword(salt, password);
-
+        const hashed = await this.hashPassword(user.salt, password);
         return hashed === user.password;
     }
 }
