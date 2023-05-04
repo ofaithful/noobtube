@@ -1,8 +1,7 @@
+import { ObjectId } from 'mongodb';
+
 export class File {
-    _id: string;
-
-    userId: string;
-
+    userId: ObjectId;
     location: string;
 
     name: string;

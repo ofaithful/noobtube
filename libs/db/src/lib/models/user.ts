@@ -1,4 +1,5 @@
 export class User {
+
     username: string;
 
     email?: string;
@@ -6,4 +7,5 @@ export class User {
     password: string;
 
     salt: string;
+
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from '../decorators/repository';
-import { BaseMongoRepository } from '../base';
+import { BaseMongoRepository, CommonDocumentData } from '../base';
 import { User } from '../models';
 
 const USER_COLLECTION_NAME = 'users';
@@ -15,7 +15,7 @@ export class UserRepository extends BaseMongoRepository<User> {
         return result;
     }
 
-    async createUser(data: User): Promise<User> {
+    async createUser(data: User): Promise<CommonDocumentData<User>> {
         const result = await this.insertOne(data);
         return result;
     }
