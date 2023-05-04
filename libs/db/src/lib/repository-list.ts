@@ -1,8 +1,8 @@
 import { Provider } from '@nestjs/common';
-import { UserRepository } from './repositories';
+import { UserRepository, FileRepository } from './repositories';
 import { MongoConnector } from './mongo-connector';
 
-const repos = [UserRepository];
+const repos = [UserRepository, FileRepository];
 
 export const getRepositoryProviders = (): Provider[] => repos.map(repo => ({
     provide: repo,

@@ -39,7 +39,7 @@ export abstract class BaseMongoRepository<T> {
         
         return {
             ...doc,
-            id: result.insertedId
+            _id: result.insertedId
         };
     }
 }
