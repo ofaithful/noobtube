@@ -17,12 +17,16 @@ export abstract class BaseMongoRepository<T> {
         return this.db.collection(this.collectionName);
     }
 
-    find(query?: Filter<T>, options?: FindOptions<T>) {
-        return this.collection.find(query, options);
+    find(query?: Filter<T>, options?: FindOptions<T>): Promise<CommonDocumentData<T>[]> {
+        return this.collection.find(query, options).toArray() as Promise<CommonDocumentData<T>[]>;
     }
 
     findOne(query?: Filter<T>, options?: FindOptions<T>) {
         return this.collection.findOne(query, options);
+    }
+
+    protected findById({ id }: Partial<Filter<T>>): Promise<CommonDocumentData<T> | null> {
+        return this.collection.findOne({ _id: id }) as Promise<CommonDocumentData<T> | null>;
     }
 
     async countDocuments(query?: Filter<T>, options?: FindOptions<T>): Promise<number> {

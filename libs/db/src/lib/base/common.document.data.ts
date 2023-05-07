@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 type MongoDocumentData = {
     _id: ObjectId;
     
-    created_at: Date;
+    created_at?: Date;
 
     updated_at?: Date;
 
