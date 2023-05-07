@@ -15,9 +15,9 @@ import { DbModule } from '@streams/db';
     DbModule.forRoot({
       mongoUri: process.env.MONGO_URI
     }),
-    // TransportModule,
+    TransportModule,
     MediaModule,
-    // AuthModule
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
