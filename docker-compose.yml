@@ -6,14 +6,18 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
     ports:
       - '2181:2181'
+    networks:
+      noobtube:
+        aliases:
+          - zookeeper
   kafka:
     build:
       context: ./docker
       dockerfile: kafka
     environment:
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENERS: LISTENER_DOCKER_INTERNAL://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://localhost:9092
+      KAFKA_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka:9092
       KAFKA_BROKER_ID: 1
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT
@@ -21,10 +25,18 @@ services:
       - '9092:9092'
     depends_on:
       - zookeeper
+    networks:
+      noobtube:
+        aliases:
+          - kafka
   redis:
     build:
       context: ./docker
       dockerfile: redis
+    networks:
+      noobtube:
+        aliases:
+          - redis
     ports:
       - '6379:6379'
   
@@ -36,6 +48,47 @@ services:
       - mongodb-data:/data/db
     ports:
       - 27017:27017
+    networks:
+      noobtube:
+        aliases:
+          - mongodb
+
+  rest-api:
+    image: rest-api
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+      - ENVIRONMENT=local
+      - APP_NAME=REST-API-MICROSERVICE
+      - JWT_SECRET=mysecret
+      - MONGO_URI=mongodb://mongodb:27017/noobtube
+      - KAFKA_BROKERS=kafka:9092
+    depends_on:
+      - kafka
+      - mongodb
+      - user
+    ports:
+      - 4000:3000
+    networks:
+      noobtube:
+
+  user:
+    image: user
+    environment:
+      - ENVIRONMENT=local
+      - APP_NAME=USER_MICROSERVICE
+      - JWT_EXPIRES=10
+      - JWT_SECRET=mysecret
+      - MONGO_URI=mongodb://mongodb:27017/noobtube
+      - KAFKA_BROKERS=kafka:9092
+    depends_on:
+      - kafka
+      - mongodb
+    networks:
+      noobtube:
 
 volumes:
   mongodb-data:
+
+networks:
+  noobtube:

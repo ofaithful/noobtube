@@ -27,13 +27,15 @@ async function bootstrap() {
     })
   );
   app.enableCors();
+
   const port = process.env.PORT || 3000;
+  const address = process.env.HOST || '0.0.0.0';
 
   app.connectMicroservice(getKafkaOptions('REST-API'));
 
   await app.startAllMicroservices();
 
-  await app.listen(port);
+  await app.listen(port, address);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
   );
