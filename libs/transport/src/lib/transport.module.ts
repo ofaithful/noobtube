@@ -1,10 +1,11 @@
 import { Module, Global } from '@nestjs/common';
 import {
-  UserTransportModule
+  UserTransportModule, VideoTransportModule
 } from './services';
 
 const modules = [
-  UserTransportModule
+  UserTransportModule,
+  VideoTransportModule
 ];
 
 @Global()
