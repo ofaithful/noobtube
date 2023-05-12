@@ -30,7 +30,7 @@ if [ $need_to_pull = true ]; then
 fi
 
 if [ $dist_dir_exists = false ] || [ $need_to_pull = true ]; then
-    npx nx docker-build rest-api & npx nx docker-build user
+    npx nx docker-build rest-api & npx nx docker-build user & npx nx docker-build video
 
     secondsToWait=5
     count=4

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Collection, Db, Filter, FindOptions, OptionalUnlessRequiredId } from 'mongodb';
+import { Collection, Db, Filter, FindOptions, OptionalUnlessRequiredId, UpdateFilter } from 'mongodb';
 import { MongoConnector } from '../mongo-connector';
 import { CommonDocumentData } from './common.document.data';
 
@@ -31,6 +31,10 @@ export abstract class BaseMongoRepository<T> {
 
     async countDocuments(query?: Filter<T>, options?: FindOptions<T>): Promise<number> {
         return this.collection.countDocuments(query, options);
+    }
+
+    async updateOne(filter: Filter<T>, update: UpdateFilter<T>) {
+        return this.collection.updateOne(filter, update);
     }
 
     protected async insertOne(doc: T): Promise<CommonDocumentData<T>> {

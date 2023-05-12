@@ -3,10 +3,6 @@ import { Provider, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 
-enum RESPONSE_CODES {
-    USERNAME_ALREADY_EXISTS,
-}
-
 export interface MessageEnvelopeError<T> {
     errorCode?: number;
     error: Error | T;
@@ -71,5 +67,5 @@ export async function startMicroservice(bootModule: any, serviceName: string) {
     .then(() => {
         const microserviceName = `${process.env.ENVIRONMENT || process.env.NODE_ENV}_${serviceName}`.toUpperCase();
         Logger.log(`${microserviceName} microservice started`);
-    });
+    }).catch(console.log);
 }

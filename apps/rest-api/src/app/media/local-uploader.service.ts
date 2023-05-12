@@ -1,6 +1,7 @@
 import { BusboyFileStream } from '@fastify/busboy';
 import { Injectable } from '@nestjs/common';
-import { CommonDocumentData, File, FileRepository, User } from '@streams/db';
+import { CommonDocumentData, File, FileRepository } from '@streams/db';
+import { VideoTransport } from '@streams/transport';
 import { randomUUID } from 'crypto';
 import { FastifyRequest } from 'fastify';
 import fs from 'fs';
@@ -9,6 +10,17 @@ import path from 'path';
 import { pipeline } from 'stream/promises';
 import { IFormData } from './helpers';
 
+type SaveFileParams = {
+    user: CommonDocumentData<File>,
+    fileName: string,
+    filePath: string,
+    uuid: string,
+}
+
+type SaveFileResult = {
+    savedFileId?: string,
+    thumbnail?: string
+}
 
 const exists = async (path:string): Promise<boolean> => {
     return access(path).then(() => true, () => false);
@@ -16,9 +28,12 @@ const exists = async (path:string): Promise<boolean> => {
 @Injectable()
 export class LocalUploaderService {
 
-    constructor(private readonly fileRepository: FileRepository) {}
+    constructor(
+        private readonly fileRepository: FileRepository,
+        private readonly videoTransport: VideoTransport
+    ) {}
 
-    async handleUpload(request: FastifyRequest) : Promise<IFormData & { savedFileId?: string }> {
+    async handleUpload(request: FastifyRequest) : Promise<IFormData & SaveFileResult> {
         const file = await request.file();
         const id = file.fields.id ? file.fields.id['value'] : randomUUID();
         const fileName = file.fields.name['value'];
@@ -46,8 +61,17 @@ export class LocalUploaderService {
         }
 
         if (totalSize === endByte) {
-            const savedFile = await this.saveFile(request['user'], fileName, path.join('tmp', id));
+            const savedFile = await this.saveFile({
+                user: request['user'],
+                fileName,
+                filePath: path.join('tmp', id),
+                uuid: id
+            });
             result['savedFileId'] = savedFile._id.toString();
+            const createThumbnailResult = await this.videoTransport.createThumbnail(savedFile);
+            if (createThumbnailResult.success) {
+                result['thumbnail'] = createThumbnailResult.payload
+            }
         }
 
         return result;
@@ -61,12 +85,13 @@ export class LocalUploaderService {
         }
     }
 
-    private async saveFile(user: CommonDocumentData<User>, fileName: string, filePath: string): Promise<CommonDocumentData<File>> {
-        const location = path.join(filePath, fileName);
+    private async saveFile(data: SaveFileParams): Promise<CommonDocumentData<File>> {
+        const location = path.join(data.filePath, data.fileName);
         return this.fileRepository.saveFile({
-            userId: user._id,
-            name: fileName,
-            location
+            userId: data.user._id,
+            name: data.fileName,
+            location,
+            uuid: data.uuid
         });
     }
 }

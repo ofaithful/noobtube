@@ -16,7 +16,6 @@ export class UserTransportService
     }
 
     async register(data: RegisterUserParams): Promise<MessageEnvelope<RegisterUserResult>> {
-        console.log('---transport data:', data);
         return this.send(USER_SERVICE_METHODS.REGISTER, data);
     }
 }
